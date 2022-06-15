@@ -1,0 +1,48 @@
+---
+resources:
+  source_uri: git@github.com:olwenya/fluentd-base.git
+docker:
+  username: aolweny
+  password: Onya1ngo5.
+  repository: aolweny/fluentd-base
+github:
+  private-key: |
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      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
+      frrzI/gPwXZazjAAAACmNob2dvQG56eHQ=
+      -----END OPENSSH PRIVATE KEY-----
+...

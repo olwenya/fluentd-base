@@ -1,0 +1,65 @@
+---
+resource_types:
+- name: datetime-version
+  type: registry-image
+  source:
+    repository: dcsg/datetime-version-resource
+
+resources:
+- name: datetime-version
+  type: datetime-version
+  icon: timer-lock
+  source:
+    timezone: 'America/New_York'
+
+- type: git
+  name: source
+  icon: github
+  source:
+    uri: ((resources.source_uri))
+    branch: master
+    private-key: ((github.private-key))
+
+# Where we will push the image to
+- name: ocibuild-image
+  type: registry-image
+  icon: robot-industrial
+  source:
+    repository: concourse/oci-build-task
+
+- name: fluend-base
+  type: registry-image
+  icon: docker
+  source:
+    repository: ((docker.repository))
+    username: ((docker.username))
+    password: ((docker.password))
+    tag: latest
+
+jobs:
+- name: build-and-ship
+  public: true
+  serial: true
+  plan:
+  - in_parallel:
+    - get: source
+      trigger: true
+    - get: ocibuild-image
+    - get: datetime-version
+  - task: build
+    image: ocibuild-image
+    privileged: true
+    config:
+      platform: linux
+      params:
+        CONTEXT: source
+      inputs: [{name: source}]
+      outputs: [{name: image}]
+      caches: [{path: cache}]
+      run: {path: build}
+  - put: fluend-base
+    params:
+      image: image/image.tar
+      additional_tags: datetime-version/version
+
+...
