@@ -8,7 +8,7 @@ resource_types:
 resources:
 - name: datetime-version
   type: datetime-version
-  icon: timer-lock
+  icon: tag-plus
   source:
     timezone: 'America/New_York'
 
@@ -18,7 +18,7 @@ resources:
   source:
     uri: ((resources.source_uri))
     branch: master
-    private-key: ((github.private-key))
+    private_key: ((github.private_key))
 
 # Where we will push the image to
 - name: ocibuild-image
@@ -45,7 +45,6 @@ jobs:
     - get: source
       trigger: true
     - get: ocibuild-image
-    - get: datetime-version
   - task: build
     image: ocibuild-image
     privileged: true
@@ -57,6 +56,7 @@ jobs:
       outputs: [{name: image}]
       caches: [{path: cache}]
       run: {path: build}
+  - put: datetime-version
   - put: fluend-base
     params:
       image: image/image.tar
