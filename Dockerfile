@@ -10,7 +10,7 @@ RUN apk add --no-cache --update --virtual .build-deps \
         fluent-plugin-detect-exceptions \
         fluent-plugin-forest \
         fluent-plugin-record-reformer \
-        fluent-plugin-filter-docker_metadata \
+        fluent-plugin-docker_metadata_elastic_filter \
         fluent-plugin-filter_typecast \
         fluent-plugin-filter_empty_keys \
  && sudo gem sources --clear-all \
